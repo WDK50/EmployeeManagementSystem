@@ -1,0 +1,48 @@
+from django.shortcuts import render,redirect
+from django.http import HttpResponse 
+
+from employee.forms import EmployeeForm
+from employee.models import Employee 
+
+# Create your views here.
+
+# Create View
+def create_employee(request):
+    if request.method == "POST":
+        form = EmployeeForm(request.POST,request)
+        if form.is_valid():
+            form.save()
+            return redirect('list')
+    else:
+        form = EmployeeForm()
+    return render(request, 'create.html', {'form': form})
+
+def individual_employee(request, pk):
+    employee = Employee.objects.get(id=pk)
+    return render(request, 'detail.html', {'employee': employee})
+
+# List View
+def employee_list(request):
+    employee = Employee.objects.all()
+    return render(request, 'list.html', {'employees':employee})
+
+# Update View
+def update_employee(request, pk):
+    employee = Employee.objects.get(id=pk)
+    if request.method == 'POST':
+        form = EmployeeForm(request.POST, instance=employee)
+
+        if form.is_valid():
+            form.save()
+            return redirect('list')
+        
+    else:
+        form = EmployeeForm(instance=employee)
+    return render(request, 'update.html', {'form':form})
+
+# Delete View
+def delete_employee(request, pk):
+    employee = Employee.objects.get(id=pk)
+    if request.method == "POST":
+        employee.delete()
+        return redirect('list')

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Employee Detail{% endblock %}
+{% block content %}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Employee Details</h2>
+    
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h4 class="card-title text-center fw-bold">{{ employee.emp_name }}</h4>
+            <p class="card-text"><strong>Employee ID:</strong> {{ employee.emp_id }}</p>
+            <p class="card-text"><strong>Email:</strong> {{ employee.emp_email }}</p>
+            <p class="card-text"><strong>Contact:</strong> {{ employee.emp_contact }}</p>
+        </div>
+        <div class="card-footer d-flex j">
+            <a href="{% url 'update' employee.pk %}" class="btn btn-success btn-sm">Update</a>
+            <form method="POST" action="{% url 'delete' employee.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+            </form>
+            <a href="{% url 'list' %}" class="btn btn-secondary btn-sm">Home</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

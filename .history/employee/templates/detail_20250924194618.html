@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Employee Detail{% endblock %}
+{% block content %}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Employee Details</h2>
+    
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h4 class="card-title text-center fw-bold">{{ employee.emp_name }}</h4>
+            <p class="card-text"><strong>Employee ID:</strong> {{ employee.emp_id }}</p>
+            <p class="card-text"><strong>Email:</strong> {{ employee.emp_email }}</p>
+            <p class="card-text"><strong>Contact:</strong> {{ employee.emp_contact }}</p>
+        </div>
+        <div class="card-footer d-flex gap-x-">
+            <a href="{% url 'update' employee.pk %}" class="btn btn-success btn-sm">Update</a>
+
+            <!-- Trigger Modal -->
+            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="{{ employee.pk }}">
+                Delete
+            </button>
+
+            <a href="{% url 'list' %}" class="btn btn-secondary btn-sm">Home</a>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete <strong>{{ employee.emp_name }}</strong>?
+      </div>
+      <div class="modal-footer">
+        <form method="POST" id="deleteForm">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger">Yes, Delete</button>
+        </form>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const deleteModal = document.getElementById('deleteModal');
+  deleteModal.addEventListener('show.bs.modal', function (event) {
+      const button = event.relatedTarget;
+      const employeeId = button.getAttribute('data-id');
+      const deleteForm = document.getElementById('deleteForm');
+      deleteForm.action = `/delete/${employeeId}/`;
+  });
+</script>
+
+{% endblock %}

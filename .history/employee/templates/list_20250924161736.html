@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Employee List{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between mb-3">
+    <h2>Employee List</h2>
+    <a href="{% url 'create' %}" class="btn btn-primary">Create Employee</a>
+</div>
+<table class="table-bordered table">
+    <thead class="table-dark">
+        <tr>
+            <th>#</th>
+            <th>Employee ID</th>
+            <th>Employee Name</th>
+            <th>Employee Email</th>
+            <th>Employee Contact</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for employee in employees %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ employee.emp_name }}</td>
+            <td>{{ employee.emp_email }}</td>
+            <td>{{ employee.emp_contact }}</td>
+            <td>
+                <a href="{% url 'update.html' employee.pk%}">Update</a></td>
+                <button></button>
+        </tr>
+        {% endfor %}
+        <tr>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+{% endblock %}
