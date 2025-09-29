@@ -151,7 +151,7 @@ def export_csv(request):
             emp.emp_contact,
             emp.get_emp_gender_display(),
             emp.is_active,
-            emp.created_at.strftime('%Y-%m-%d %H:%M') if emp.created_at else ''
+             emp.created_at.strftime('%Y-%m-%d %H:%M') if emp.created_at else ''
         ])
 
     return response

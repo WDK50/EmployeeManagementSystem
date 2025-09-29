@@ -145,13 +145,14 @@ def export_csv(request):
 
          writer.writerow([
             emp.emp_id,
-            profile_pic,
+            # profile_pic,
+            f'=HYPERLINK("{emp.profile_url}", "View Image")',
             emp.emp_name,
             emp.emp_email,
             emp.emp_contact,
             emp.get_emp_gender_display(),
             emp.is_active,
-            emp.created_at.strftime('%Y-%m-%d %H:%M') if emp.created_at else ''
+             emp.created_at.strftime('%Y-%m-%d %H:%M') if emp.created_at else ''
         ])
 
     return response

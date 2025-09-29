@@ -132,7 +132,7 @@ def export_csv(request):
     response['Content-Disposition'] = 'attachment; filename="employees.csv"'
 
     writer = csv.writer(response)
-    writer.writerow(['ID','Profile URL', 'Name', 'Email', 'Contact', 'Gender', 'Status', 'Created At'])
+    writer.writerow(['ID','Profile', 'Name', 'Email', 'Contact', 'Gender', 'Status', 'Created At'])
 
     employees = Employee.objects.all()
 
@@ -151,7 +151,7 @@ def export_csv(request):
             emp.emp_contact,
             emp.get_emp_gender_display(),
             emp.is_active,
-            emp.created_at.strftime('%Y-%m-%d %H:%M') if emp.created_at else ''
+             emp.created_at.strftime('%Y-%m-%d %H:%M') if emp.created_at else ''
         ])
 
     return response
