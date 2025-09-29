@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Django CRUD{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <style>
+      .modal-content{
+        border-radius: 10px;
+      }
+      #searchInput:focus {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+      .custom-pagination .page-link {
+  color: black !important;
+  font-weight: normal;
+  border: 1px solid #dee2e6;
+}
+
+.custom-pagination .page-link:hover {
+  color: black !important;
+  font-weight: bold;
+  background-color: #f8f9fa; /* light hover effect */
+}
+
+.custom-pagination .active .page-link {
+  background-color: #e9ecef !important;
+  color: black !important;
+  font-weight: bold;
+  border-color: #dee2e6;
+}
+.btn i,
+a i {
+  cursor: pointer !important;
+}
+.table-wrapper {
+  position: relative;
+}
+
+table th, table td {
+  white-space: nowrap;
+}
+
+.actions-col {
+  position: sticky;
+  right: 0;
+  background-color: lightgrey !important;
+  z-index: 10;
+  text-align: center;
+}
+
+.table-wrapper::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+  background-color: rgba(0,0,0,0.2);
+  border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+  background-color: rgba(0,0,0,0.05);
+}
+
+</style>
+</head>
+<body>
+ <nav class="navbar navbar-light bg-dark px-3">
+  <a class="navbar-brand text-white">Employee Management</a>
+  <form class="d-flex ms-auto">
+    <input id="searchInput" class="form-control me-2 " type="search" placeholder="Search Employee..." aria-label="Search">
+    <button class="btn btn-outline-success text-white" type="submit">Search</button>
+  </form>
+</nav>
+<div class="container mt-4">{% block content %}{% endblock  %}</div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>    
+</body>
+</html>
