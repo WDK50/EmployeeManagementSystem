@@ -15,3 +15,29 @@ class EmployeeForm(forms.ModelForm):
             'emp_gender': 'Gender',
             'emp_profile': 'Profile Picture',
         }
+        
+# forms.py
+from django import forms
+from .models import Profile
+from django.contrib.auth.models import User
+
+class UserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username']
+
+from django import forms
+from .models import Profile
+
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['gender', 'dob', 'address', 'profile_image']
+        widgets = {
+            'dob': forms.DateInput(attrs={'type': 'date'}),
+            'profile_image': forms.FileInput(attrs={'class': 'form-control'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['profile_image'].label = 'Change Profile Picture'

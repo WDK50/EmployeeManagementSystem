@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% block title %}Update Profile{% endblock %}
+{% block content %}
+
+<div class="container mt-5">
+  <h2 class="mb-4 text-center">Update Profile</h2>
+
+  <div class="card shadow-sm p-3">
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="row g-3 align-items-start">
+
+        <!-- Left Side: Profile Image -->
+        <div class="col-md-4 text-center">
+          {% if request.user.profile.profile_image %}
+            <img id="preview"
+                 src="{{ request.user.profile.profile_image.url }}"
+                 class="img-fluid rounded shadow mb-3"
+                 style="max-height:250px; width:100%; object-fit:cover;">
+          {% else %}
+            <img id="preview"
+                 src="/media/profiles/default.png"
+                 class="img-fluid rounded shadow mb-3"
+                 style="max-height:250px; width:100%; object-fit:cover;">
+          {% endif %}
+
+          <div class="mb-3">
+             <label class="form-label fw-semibold">Change Profile Picture</label>
+            {{ p_form.profile_image.as_widget }}
+          </div>
+        </div>
+
+        <!-- Right Side: Form Fields -->
+        <div class="col-md-8">
+          <div class="row g-3">
+
+            <div class="col-12">
+              <label class="form-label fw-semibold">Username</label>
+              {{ u_form.username }}
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Gender</label>
+              {{ p_form.gender }}
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Date of Birth</label>
+              {{ p_form.dob }}
+            </div>
+
+            <div class="col-12">
+              <label class="form-label fw-semibold">Address</label>
+              {{ p_form.address }}
+            </div>
+
+            <div class="col-12">
+              <button type="submit" class="btn btn-primary w-100 mt-1">Update Profile</button>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // live preview for uploaded image
+  const fileInput = document.getElementById("id_profile_image");
+  const preview = document.getElementById("preview");
+  if (fileInput) {
+    fileInput.addEventListener("change", function() {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          preview.src = e.target.result;
+        }
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+
+  // smaller address box
+  document.addEventListener('DOMContentLoaded', function () {
+    const addr = document.querySelector('textarea[name$="address"], input[name$="address"]');
+    if (addr && addr.tagName.toLowerCase() === 'textarea') {
+      addr.setAttribute('rows', '3');
+      addr.classList.add('address-input');
+    }
+  });
+</script>
+
+<style>
+  input, select, textarea {
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .address-input {
+    max-height: 120px;
+    height: 80px;
+    resize: vertical;
+    overflow: auto;
+  }
+
+  .col-md-8 .form-label + input,
+  .col-md-8 .form-label + select,
+  .col-md-8 .form-label + textarea {
+    width: 100%;
+  }
+
+  @media (min-width: 768px) {
+    .col-md-4 { border-right: 1px solid rgba(0,0,0,0.05); padding-right: 24px; }
+    .col-md-8 { padding-left: 24px; }
+  }
+</style>
+
+{% endblock %}

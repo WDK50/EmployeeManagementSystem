@@ -74,14 +74,18 @@ a i {
 </form>
 
   {% if user.is_authenticated %}
-    <div class="dropdown">
-      <button class="btn btn-outline-light dropdown-toggle" type="button" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">
-        {{ user.username }}
-      </button>
-      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
-        <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
-      </ul>
-    </div>
+   <div class="dropdown">
+  <button class="btn btn-outline-light dropdown-toggle" type="button" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">
+    {{ user.username }}
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
+    <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+    <li><a class="dropdown-item" href="{% url 'update_password' %}">Change Password</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+  </ul>
+</div>
+
   {% else %}
     <div>
       <a href="{% url 'login' %}" class="btn btn-outline-light me-2">Login</a>
