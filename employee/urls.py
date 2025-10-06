@@ -1,7 +1,13 @@
-from django.urls import path # type: ignore
+from django.urls import include, path # type: ignore
 from employee.views import bulk_delete_employee, create_employee,delete_employee, export_csv, individual_employee, search_employee, send_email,update_employee,employee_list # type: ignore
+from rest_framework.routers import DefaultRouter
+from .views import EmployeeViewSet
+
+router = DefaultRouter()
+router.register(r'employees', EmployeeViewSet)
 
 urlpatterns = [
+  path('api/', include(router.urls)),
   path('', employee_list, name='list'),
   path('export/csv/', export_csv, name='export_csv'),
   path('search/', search_employee, name='search_employee'),

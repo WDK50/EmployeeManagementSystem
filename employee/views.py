@@ -8,6 +8,12 @@ from employee.forms import EmployeeForm
 from employee.models import Employee 
 from .models import Employee
 
+from rest_framework import viewsets
+from .serializers import EmployeeSerializer
+
+class EmployeeViewSet(viewsets.ModelViewSet):
+    queryset = Employee.objects.all()
+    serializer_class = EmployeeSerializer
 
 # Create your views here.
 def send_email(request,pk):
@@ -60,9 +66,24 @@ from .models import Employee
 
 from django.core.paginator import Paginator
 
+from django.core.paginator import Paginator
+from django.shortcuts import render
+from .models import Employee
+from django.db.models import Q
+
 def employee_list(request):
     employees = Employee.objects.all()
 
+    # Search
+    query = request.GET.get('q')
+    if query:
+        employees = employees.filter(
+            Q(emp_name__icontains=query) |
+            Q(emp_email__icontains=query) |
+            Q(emp_contact__icontains=query)
+        )
+
+    # Filters
     status = request.GET.get('status')
     gender = request.GET.get('gender')
     created_at = request.GET.get('created_at')
@@ -77,7 +98,7 @@ def employee_list(request):
         employees = employees.filter(created_at__date=created_at)
 
     # Sorting
-    order = request.GET.get('order')  # e.g., "name_asc", "name_desc", "created_at_asc", "created_at_desc"
+    order = request.GET.get('order')
     if order == "name_asc":
         employees = employees.order_by("emp_name")
     elif order == "name_desc":
@@ -86,14 +107,17 @@ def employee_list(request):
         employees = employees.order_by("created_at")
     elif order == "created_at_desc":
         employees = employees.order_by("-created_at")
-        
-    # pagination
-    paginator = Paginator(employees, 5, orphans=2)  # 5 employees per page
+
+    # Pagination
+    paginator = Paginator(employees, 5, orphans=2)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    return render(request, "list.html", {"page_obj": page_obj})
-
+    return render(
+        request,
+        "list.html",
+        {"page_obj": page_obj, "query": query}
+    )
 # Update View
 def update_employee(request, pk):
     employee = Employee.objects.get(id=pk)

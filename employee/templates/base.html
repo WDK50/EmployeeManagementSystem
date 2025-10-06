@@ -43,17 +43,84 @@ a i {
 .action-col i{
   outline: none !important;
 }
+.form-control input:focus{
+  outline: none !important;
+}
 </style>
 </head>
 <body>
- <nav class="navbar navbar-light bg-dark px-3">
+<nav class="navbar navbar-light bg-dark px-3">
   <a class="navbar-brand text-white">Employee Management</a>
-  <form class="d-flex ms-auto">
-    <input id="searchInput" class="form-control me-2 " type="search" placeholder="Search Employee..." aria-label="Search">
-    <button class="btn btn-outline-light text-black" type="submit">Search</button>
-  </form>
+
+<form class="d-flex me-3 " method="get" action="{% url 'employee_list' %}">
+  <div class="input-group " >
+    <input 
+      class="form-control shadow-none outline-none" 
+      type="search" 
+      name="q" 
+      placeholder="Search employees..." 
+      value="{{ query|default:'' }}" 
+      aria-label="Search"
+    >
+    <button class="btn btn-secondary shadow-none outline-none" type="submit">
+      <i class="bi bi-search outline-none"></i>
+    </button>
+  </div>
+</form>
+
+  {% if user.is_authenticated %}
+    <div class="dropdown">
+      <button class="btn btn-outline-light dropdown-toggle" type="button" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">
+        {{ user.username }}
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
+        <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+      </ul>
+    </div>
+  {% else %}
+    <div>
+      <a href="{% url 'login' %}" class="btn btn-outline-light me-2">Login</a>
+      <a href="{% url 'signup' %}" class="btn btn-primary">Sign Up</a>
+    </div>
+  {% endif %}
 </nav>
 <div class="container mt-4">{% block content %}{% endblock  %}</div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>    
+    <script>
+  const searchInput = document.getElementById("searchInput");
+  const employeeList = document.getElementById("employeeList"); 
+
+  function fetchEmployees(query = "") {
+    fetch(`/search_employee/?q=${query}`)
+      .then(res => res.json())
+      .then(data => {
+        employeeList.innerHTML = "";
+        data.employees.forEach(emp => {
+          let card = `
+            <div class="col-md-4 mb-3">
+              <div class="card">
+                ${emp.profile ? `<img src="${emp.profile}" class="card-img-top" alt="${emp.name}">` : ""}
+                <div class="card-body">
+                  <h5 class="card-title">${emp.name}</h5>
+                  <p class="card-text">${emp.email}<br>${emp.contact}</p>
+                </div>
+              </div>
+            </div>
+          `;
+          employeeList.insertAdjacentHTML("beforeend", card);
+        });
+      });
+  }
+
+  // Initial load (show all employees)
+  fetchEmployees();
+
+  // Search while typing
+  searchInput.addEventListener("input", function () {
+    let query = this.value.trim();
+    fetchEmployees(query);
+  });
+</script>
+
 </body>
 </html>

@@ -22,6 +22,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('', include('employee.urls')),
+    path("register/", include("register.urls")),
 ]
     
 if settings.DEBUG:  # Only serve media in development
