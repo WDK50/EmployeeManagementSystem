@@ -124,6 +124,10 @@ STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 AUTH_USER_MODEL = "register.User"
 
+LOGIN_URL = 'login_view'          # name of your login view
+LOGIN_REDIRECT_URL = 'employee_list'  # where to go after successful login
+LOGOUT_REDIRECT_URL = 'login_view'        # where to go after logout
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 

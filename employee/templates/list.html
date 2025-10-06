@@ -101,6 +101,9 @@
     <i class="bi bi-arrow-down-up text-white"></i>
   </a>
 </th>
+  {% if request.user.is_superuser %}
+      <th>Created By</th>
+    {% endif %}
         <th>Status</th>
         <th class="position-sticky end-0 ">Actions</th>
       </tr>
@@ -123,6 +126,9 @@
         <td>{{ employee.emp_contact }}</td>
         <td>{{ employee.get_emp_gender_display }}</td>
         <td>{{ employee.created_at }}</td>
+        {% if request.user.is_superuser %}
+        <td class="text-center">{{ employee.created_by }}</td>
+      {% endif %}
         <td class="text-center">
           {% if employee.is_active %}
             <i class="bi bi-check-circle-fill text-success fs-5"></i>

@@ -6,6 +6,7 @@ class EmployeeForm(forms.ModelForm):
         model = Employee
         # fields = ('emp_id','emp_name','emp_email','emp_contact')
         fields = '__all__'
+        exclude = ['created_by']
         labels = {
             'emp_id': 'Employee ID',
             'emp_name': 'Full Name',

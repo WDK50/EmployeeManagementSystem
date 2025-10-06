@@ -48,9 +48,11 @@ def search_employee(request):
 # Create View
 def create_employee(request):
     if request.method == "POST":
-        form = EmployeeForm(request.POST,request.FILES)
+        form = EmployeeForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            employee = form.save(commit=False)
+            employee.created_by = request.user
+            employee.save()
             return redirect('list')
     else:
         form = EmployeeForm()
@@ -71,10 +73,15 @@ from django.shortcuts import render
 from .models import Employee
 from django.db.models import Q
 
-def employee_list(request):
-    employees = Employee.objects.all()
+from django.contrib.auth.decorators import login_required
 
-    # Search
+@login_required(login_url='login')  # redirect if not logged in
+def employee_list(request):
+    if request.user.is_superuser:
+        employees = Employee.objects.all()
+    else:
+        employees = Employee.objects.filter(created_by=request.user)
+
     query = request.GET.get('q')
     if query:
         employees = employees.filter(
@@ -83,7 +90,6 @@ def employee_list(request):
             Q(emp_contact__icontains=query)
         )
 
-    # Filters
     status = request.GET.get('status')
     gender = request.GET.get('gender')
     created_at = request.GET.get('created_at')
@@ -97,7 +103,6 @@ def employee_list(request):
     if created_at:
         employees = employees.filter(created_at__date=created_at)
 
-    # Sorting
     order = request.GET.get('order')
     if order == "name_asc":
         employees = employees.order_by("emp_name")
@@ -108,7 +113,6 @@ def employee_list(request):
     elif order == "created_at_desc":
         employees = employees.order_by("-created_at")
 
-    # Pagination
     paginator = Paginator(employees, 5, orphans=2)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -118,19 +122,21 @@ def employee_list(request):
         "list.html",
         {"page_obj": page_obj, "query": query}
     )
+    
 # Update View
 def update_employee(request, pk):
     employee = Employee.objects.get(id=pk)
     if request.method == 'POST':
-        form = EmployeeForm(request.POST,request.FILES, instance=employee )
+        form = EmployeeForm(request.POST, request.FILES, instance=employee)
         if form.is_valid():
-            form.save()
+            updated_employee = form.save(commit=False)
+            if not updated_employee.created_by:
+                updated_employee.created_by = request.user  # ✅ set if missing
+            updated_employee.save()
             return redirect('list')
-        
     else:
         form = EmployeeForm(instance=employee)
-    return render(request, 'update.html', {'form':form})
-
+    return render(request, 'update.html', {'form': form})
 # Delete View
 def delete_employee(request, pk):
     employee = Employee.objects.get(id=pk)
